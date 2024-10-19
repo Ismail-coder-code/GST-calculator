@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Business GST Payable Calculator</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 20px;
+        }
+        .container {
+            background-color: white;
+            padding: 20px;
+            border-radius: 5px;
+            max-width: 500px;
+            margin: auto;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        input[type="number"], select {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        button {
+            width: 100%;
+            padding: 10px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        .result {
+            font-size: 18px;
+            margin-top: 20px;
+        }
+        .positive {
+            color: green;
+        }
+        .negative {
+            color: red;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h2>GST Payable Calculator for Business Owners</h2>
+
+        <label for="sales">Total Sales (₹):</label>
+        <input type="number" id="sales" placeholder="Enter total sales amount" required>
+
+        <label for="gstCollected">GST Rate on Sales (%):</label>
+        <select id="gstCollected">
+            <option value="5">5%</option>
+            <option value="12">12%</option>
+            <option value="18" selected>18%</option>
+            <option value="28">28%</option>
+        </select>
+
+        <label for="purchases">Total Purchases (₹) (Enter 0 if no purchases):</label>
+        <input type="number" id="purchases" placeholder="Enter total purchases amount" value="0" required>
+
+        <label for="gstPaid">GST Rate on Purchases (%):</label>
+        <select id="gstPaid">
+            <option value="5">5%</option>
+            <option value="12">12%</option>
+            <option value="18" selected>18%</option>
+            <option value="28">28%</option>
+        </select>
+
+        <button onclick="calculateGSTPayable()">Calculate GST Payable</button>
+
+        <div class="result" id="result"></div>
+    </div>
+
+    <script>
+        function calculateGSTPayable() {
+            const sales = parseFloat(document.getElementById('sales').value);
+            const gstCollectedRate = parseFloat(document.getElementById('gstCollected').value);
+            const purchases = parseFloat(document.getElementById('purchases').value) || 0;
+            const gstPaidRate = parseFloat(document.getElementById('gstPaid').value);
+
+            if (!sales || sales < 0) {
+                document.getElementById('result').innerHTML = "Please enter a valid sales amount.";
+                return;
+            }
+
+            // Calculate GST collected on sales
+            const gstCollected = (sales * gstCollectedRate) / 100;
+
+            // Calculate GST paid on purchases (set to 0 if no purchases)
+            const gstPaid = (purchases > 0) ? (purchases * gstPaidRate) / 100 : 0;
+
+            // Calculate GST payable
+            const gstPayable = gstCollected - gstPaid;
+
+            let resultText;
+            if (gstPayable > 0) {
+                resultText = `<p class="positive">You need to pay ₹${gstPayable.toFixed(2)} to the GST department.</p>`;
+            } else if (gstPayable < 0) {
+                resultText = `<p class="negative">You have an input credit of ₹${Math.abs(gstPayable).toFixed(2)}.</p>`;
+            } else {
+                resultText = "<p>No GST payable. You're balanced.</p>";
+            }
+
+            document.getElementById('result').innerHTML = resultText;
+        }
+    </script>
+
+</body>
+</html>
